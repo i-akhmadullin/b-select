@@ -13,11 +13,11 @@
     },
     dropdownTemplate = [
       '<div class="b-select" id="b-select_{{ id }}">',
-        '<a class="dk_toggle">',
-          '<span class="dk_label">{{ label }}</span>',
+        '<a class="b-select__toggle">',
+          '<span class="b-select__label">{{ label }}</span>',
         '</a>',
-        '<div class="dk_options">',
-          '<ul class="dk_options_inner">',
+        '<div class="b-select__options">',
+          '<ul class="b-select__options-inner">',
           '</ul>',
         '</div>',
       '</div>'
@@ -42,7 +42,7 @@
         // This gets applied to the 'b-select' element
         id = $select.attr('id') || $select.attr('name'),
         // This gets updated to be equal to the longest <option> element
-        width  = settings.width || $select.outerWidth(),
+        minWidth = settings.width || $select.outerWidth(),
         // The completed b-select element
         $dk = false,
         theme;
@@ -64,8 +64,8 @@
       $dk = _build(dropdownTemplate, data);
 
       // Make the dropdown fixed width if desired
-      $dk.find('.dk_toggle').css({
-        'width' : width + 'px'
+      $dk.find('.b-select__toggle').css({
+        'min-width' : minWidth + 'px'
       });
 
       $dk.addClass($select[0].className);
@@ -94,21 +94,19 @@
 
       // Focus events
       $dk.add($select).bind('focus.dropkick', function() {
-        $dk.addClass('dk_focus');
+        $dk.addClass('b-select_focus');
       }).bind('blur.dropkick', function() {
-        $dk.removeClass('dk_open dk_focus');
+        $dk.removeClass('b-select_open b-select_focus');
       });
     });
   };
 
   // Allows dynamic theme changes
   methods.theme = function (newTheme) {
-    var
-      $select   = $(this),
+    var $select = $(this),
       list      = $select.data('dropkick'),
       $dk       = list.$dk,
-      oldtheme  = 'dk_theme_' + list.theme
-    ;
+      oldtheme  = 'dk_theme_' + list.theme;
 
     $dk.removeClass(oldtheme).addClass('dk_theme_' + newTheme);
 
@@ -118,14 +116,12 @@
   // Reset all <selects and dropdowns in our lists array
   methods.reset = function () {
     for (var i = 0, l = lists.length; i < l; i++) {
-      var
-        listData  = lists[i].data('dropkick'),
-        $dk       = listData.$dk,
-        $current  = $dk.find('li').first()
-      ;
+      var listData = lists[i].data('dropkick'),
+        $dk        = listData.$dk,
+        $current   = $dk.find('li').first();
 
-      $dk.find('.dk_label').text(listData.label);
-      $dk.find('.dk_options_inner').animate({ scrollTop: 0 }, 0);
+      $dk.find('.b-select__label').text(listData.label);
+      $dk.find('.b-select__options-inner').animate({ scrollTop: 0 }, 0);
 
       _setCurrent($current, $dk);
       _updateFields($current, $dk, true);
@@ -153,16 +149,14 @@
 
   // private
   function _handleKeyBoardNav(e, $dk) {
-    var
-      code     = e.keyCode,
-      options  = $dk.find('.dk_options'),
-      open     = $dk.hasClass('dk_open'),
-      current  = $dk.find('.dk_option_current'),
+    var code   = e.keyCode,
+      options  = $dk.find('.b-select__options'),
+      open     = $dk.hasClass('b-select_open'),
+      current  = $dk.find('.b-select__option_current'),
       first    = options.find('li').first(),
       last     = options.find('li').last(),
       next,
-      prev
-    ;
+      prev;
 
     switch (code) {
       case keyMap.enter:
@@ -226,7 +220,7 @@
     $select = data.$select;
     $select.val(value).trigger('change'); // Added to let it act like a normal select
 
-    $dk.find('.dk_label').text(label);
+    $dk.find('.b-select__label').text(label);
 
     reset = reset || false;
 
@@ -237,26 +231,26 @@
 
   // Set the currently selected option
   function _setCurrent($current, $dk) {
-    $dk.find('.dk_option_current').removeClass('dk_option_current');
-    $current.addClass('dk_option_current');
+    $dk.find('.b-select__option_current').removeClass('b-select__option_current');
+    $current.addClass('b-select__option_current');
 
     _setScrollPos($dk, $current);
   }
 
   function _setScrollPos($dk, anchor) {
     var height = anchor.prevAll('li').outerHeight() * anchor.prevAll('li').length;
-    $dk.find('.dk_options_inner').animate({ scrollTop: height + 'px' }, 0);
+    $dk.find('.b-select__options-inner').animate({ scrollTop: height + 'px' }, 0);
   }
 
   // Close a dropdown
   function _closeDropdown($dk) {
-    $dk.removeClass('dk_open');
+    $dk.removeClass('b-select_open');
   }
 
   // Open a dropdown
   function _openDropdown($dk) {
-    $dk.find('.dk_options').css({ top : $dk.find('.dk_toggle').outerHeight() - 1 });
-    $dk.toggleClass('dk_open');
+    $dk.find('.b-select__options').css({ top : $dk.find('.b-select__toggle').outerHeight() - 1 });
+    $dk.toggleClass('b-select_open');
   }
 
   /**
@@ -270,11 +264,9 @@
 
     if (view.options && view.options.length) {
       for (var i = 0, l = view.options.length; i < l; i++) {
-        var
-          $option   = $(view.options[i]),
-          current   = 'dk_option_current',
-          oTemplate = optionTemplate
-        ;
+        var $option = $(view.options[i]),
+          current   = 'b-select__option_current',
+          oTemplate = optionTemplate;
 
         oTemplate = oTemplate.replace('{{ value }}', $option.val());
         oTemplate = oTemplate.replace('{{ current }}', (_notBlank($option.val()) === view.value) ? current : '');
@@ -285,7 +277,7 @@
     }
 
     $dk = $(template);
-    $dk.find('.dk_options_inner').html(options.join(''));
+    $dk.find('.b-select__options-inner').html(options.join(''));
 
     return $dk;
   }
@@ -296,8 +288,10 @@
 
   $(function () {
 
+    $('.b-select__options-inner').addClass('overthrow');
+
     // Handle click events on the dropdown toggler
-    $(document).on('click', '.dk_toggle', function (e) {
+    $(document).on('click', '.b-select__toggle', function() {
       var $dk  = $(this).parents('.b-select').first();
 
       _openDropdown($dk);
@@ -306,7 +300,7 @@
     });
 
     // Handle click events on individual dropdown options
-    $(document).on('click', '.dk_options a', function (e) {
+    $(document).on('click', '.b-select__options a', function() {
       var $option = $(this),
           $dk     = $option.parents('.b-select').first();
 
@@ -318,17 +312,12 @@
     });
 
     // Setup keyboard nav
-    $(document).bind('keydown.dk_nav', function (e) {
-      var
-        // Look for an open dropdown...
-        $open    = $('.b-select.dk_open'),
-
+    $(document).bind('keydown.dk_nav', function(e) {
+      var $open    = $('.b-select.b-select_open'),
         // Look for a focused dropdown
-        $focused = $('.b-select.dk_focus'),
-
+        $focused = $('.b-select.b-select_focus'),
         // Will be either $open, $focused, or null
-        $dk = null
-      ;
+        $dk = null;
 
       // If we have an open dropdown, key events should get sent to that one
       if ($open.length) {
@@ -338,7 +327,7 @@
         $dk = $focused;
       }
 
-      if ($dk) {
+      if ($dk.length) {
         _handleKeyBoardNav(e, $dk);
       }
     });
@@ -350,9 +339,9 @@
     });
 
     $(document).on('click', function(e) {
-        if(!$(e.target).closest('.b-select').length) {
-          _closeDropdown($('.b-select'));
-        }
+      if(!$(e.target).closest('.b-select').length) {
+        _closeDropdown($('.b-select'));
+      }
     });
   });
 
@@ -360,20 +349,8 @@
 
 
 
-
-
-
-
-
-
-
-
 $('.b-select').dropkick({
-	change: function (value/*, label*/) {
-		$(this).dropkick('theme', value);
-	}
+  change: function (value/*, label*/) {
+    console.log(value);
+  }
 });
-
-$('.dk_container').first().focus();
-
-$('.dk_options_inner').addClass('overthrow');

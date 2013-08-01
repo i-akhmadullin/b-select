@@ -1,3 +1,7 @@
+smoothing()
+  -webkit-font-smoothing: antialiased;
+
+
 /* Overthrow CSS:
    Enable overflow: auto on elements with overthrow class when html element has overthrow class too */
 .overthrow-enabled .overthrow {
@@ -5,80 +9,66 @@
     -webkit-overflow-scrolling: touch;
 }
 
-
 select.b-select
   position: absolute;
   clip: rect(0,0,0,0);
 
-/***** Begin Theme, feel free to edit in here! ******/
-
 .b-select
-  // margin-bottom: 18px;
-  // border-radius: 5px;
-  // background: linear-gradient(top, #fff, #f5f5f5);
-  background-color: #fff;
-  // font-size: 12px;
-  // font-family: 'Helvetica', Arial, sans-serif;
-  // line-height: 14px;
-
   display: block;
   box-sizing: border-box;
   margin-top: 7px;
   margin-bottom: 7px;
   border: 1px solid #d4d7c9;
   border-radius: 3px;
+  background-color: #fff;
   box-shadow: inset 0 1px 2px rgba(0,0,0,0.26);
   color: #191919;
+  text-align: left;
   font-size: 13px;
   smoothing();
 
-  &_days
-  &_month
-  &_year
-    float: left;
-    margin-right: 10px;
-  &_days
-    width: 71px;
-  &_month
-    width: 113px;
-  &_year
-    width: 91px;
+  &:focus
+    outline: 0;
 
-.b-select:focus {
-  outline: 0;
-}
-.b-select a {
-  text-decoration: none;
-  cursor: pointer;
-}
-.dk_toggle {
+  a
+    text-decoration: none;
+    cursor: pointer;
+
+.b-select__toggle {
   display: block;
-  // padding: 7px 45px 7px 10px;
-  padding: 12px 13px;
-  width: auto !important;
+  padding: 12px 35px 12px 13px;
   border: 1px solid #ccc;
   border-radius: 3px;
-  background-image: url('b-select__arrow.png');
-  background-position: 90% center;
-  background-repeat: no-repeat;
   color: #333;
   font-size: 15px;
   transition: border-color 0.5s;
 }
-// .dk_toggle:hover {
+.b-select__toggle:after{
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: block;
+  width: 25px;
+  height: 100%;
+  background-image: url('b-select__arrow.png');
+  background-position: center center;
+  background-repeat: no-repeat;
+  content: "";
+}
+// .b-select__toggle:hover {
 //   border-color: #8c8c8c;
 // }
-// .dk_focus .dk_toggle {
+// .b-select_focus .b-select__toggle {
 //   border-color: #40b5e2;
 // }
-.dk_focus .dk_toggle {
+.b-select_focus .b-select__toggle {
   box-shadow: 0 0 5px #40b5e2;
 }
-.dk_open {
+.b-select_open {
   box-shadow: 0 0 5px #40b5e2;
   z-index: 10;
 }
-.dk_open .dk_toggle {
+.b-select_open .b-select__toggle {
   // border-color: #8c8c8c;
   border-radius: 3px 3px 0 0;
   // background-color: #ececec;
@@ -86,35 +76,35 @@ select.b-select
   // color: #ccc;
   display: block;
 }
-.dk_options {
+.b-select__options {
   border-radius: 0 0 5px 5px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, .2);
 }
-.dk_options a {
+.b-select__options a {
   padding: 6px 15px;
   text-decoration: underline;
   background-color: #fff;
 }
-.dk_options li:last-child a {
+.b-select__options li:last-child a {
   border-bottom: none;
 }
-.dk_options a:hover,
-.dk_option_current a {
+.b-select__options a:hover,
+.b-select__option_current a {
   // border-bottom-color: #004c72;
   // background-color: #0084c7;
-  color: grey;
+  color: gray;
   text-decoration: none;
 }
-.dk_option_current a,
-.dk_options .disabled {
+.b-select__option_current a,
+.b-select__options .disabled {
   cursor: default;
 }
-.dk_options .disabled:hover {
+.b-select__options .disabled:hover {
   border-bottom-color: #999;
   background-color: #fff;
   cursor: default;
 }
-.dk_options_inner {
+.b-select__options-inner {
   max-height: 400px;
   border-right: 1px solid #d4d7c9;
   border-bottom-width: 2px;
@@ -129,49 +119,37 @@ select.b-select
 
 .b-select {
   position: relative;
-  display: none;
-  float: left;
+  display inline-block;
 }
 .b-select a {
   outline: 0;
 }
-.dk_toggle {
+.b-select__toggle {
   position: relative;
   display: block;
 }
-.dk_open {
+.b-select_open {
   position: relative;
 }
-.dk_open .dk_options {
+.b-select_open .b-select__options {
   display: block;
 }
-.dk_open .dk_label {
+.b-select_open .b-select__label {
   color: inherit;
 }
-.dk_options {
+.b-select__options {
   position: absolute;
   right: 0;
   display: none;
   margin-top: -1px;
   width: 100%;
 }
-.dk_options a,
-.dk_options a:link,
-.dk_options a:visited {
+.b-select__options a,
+.b-select__options a:link,
+.b-select__options a:visited {
   display: block;
 }
-.dk_options_inner {
+.b-select__options-inner {
   position: relative;
-  overflow: scroll;
-}
-.dk_touch .dk_options {
-  overflow: hidden;
-}
-.dk_touch .dk_options_inner {
-  overflow: visible;
-  max-height: none;
-}
-.dk_fouc select {
-  position: absolute;
-  clip: rect(0,0,0,0);
+  overflow: auto;
 }
