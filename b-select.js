@@ -22,14 +22,10 @@
         '</div>',
       '</div>'
     ].join(''),
-    optionTemplate = '<li class="{{ current }}"><a data-dk-dropdown-value="{{ value }}">{{ text }}</a></li>',
-    defaults = {
-      theme  : false,
-      change : false
-    };
+    optionTemplate = '<li class="{{ current }}"><a data-dk-dropdown-value="{{ value }}">{{ text }}</a></li>';
 
   methods.init = function (settings) {
-    settings = $.extend({}, defaults, settings);
+    settings = $.extend({}, settings);
 
     return this.each(function () {
       var $select = $(this),
@@ -41,11 +37,9 @@
         data = $select.data('dropkick') || {},
         // This gets applied to the 'b-select' element
         id = $select.attr('id') || $select.attr('name'),
-        // This gets updated to be equal to the longest <option> element
-        minWidth = settings.width || $select.outerWidth(),
         // The completed b-select element
         $dk = false,
-        theme;
+        mod;
 
       // Dont do anything if we've already setup dropkick on this element
       if (data.id) {
@@ -63,11 +57,6 @@
       // Build the dropdown HTML
       $dk = _build(dropdownTemplate, data);
 
-      // Make the dropdown fixed width if desired
-      $dk.find('.b-select__toggle').css({
-        'min-width' : minWidth + 'px'
-      });
-
       $dk.addClass($select[0].className);
 
       // Hide the <select> list and place our new one in front of it
@@ -76,10 +65,10 @@
       // Update the reference to $dk
       $dk = $('#b-select_' + id).show();
 
-      // Save the current theme
-      theme = settings.theme ? settings.theme : 'default';
-      $dk.addClass('dk_theme_' + theme);
-      data.theme = theme;
+      // Save the current mod
+      mod = $select.data('mod') ? $select.data('mod') : 'default';
+      $dk.addClass('b-select_mod_' + mod);
+      data.mod = mod;
 
       // Save the updated $dk reference into our data object
       data.$dk = $dk;
@@ -101,16 +90,16 @@
     });
   };
 
-  // Allows dynamic theme changes
-  methods.theme = function (newTheme) {
+  // Allows dynamic mod changes
+  methods.mod = function (newMod) {
     var $select = $(this),
       list      = $select.data('dropkick'),
       $dk       = list.$dk,
-      oldtheme  = 'dk_theme_' + list.theme;
+      oldMod    = 'b-select_mod_' + list.mod;
 
-    $dk.removeClass(oldtheme).addClass('dk_theme_' + newTheme);
+    $dk.removeClass(oldMod).addClass('b-select_mod_' + newMod);
 
-    list.theme = newTheme;
+    list.mod = newMod;
   };
 
   // Reset all <selects and dropdowns in our lists array

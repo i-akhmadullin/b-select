@@ -1,13 +1,11 @@
 smoothing()
   -webkit-font-smoothing: antialiased;
 
-
 /* Overthrow CSS:
    Enable overflow: auto on elements with overthrow class when html element has overthrow class too */
-.overthrow-enabled .overthrow {
-    overflow: auto;
-    -webkit-overflow-scrolling: touch;
-}
+.overthrow-enabled .overthrow
+  overflow: auto;
+  -webkit-overflow-scrolling: touch;
 
 select.b-select
   position: absolute;
@@ -36,7 +34,7 @@ select.b-select
 
 .b-select__toggle {
   display: block;
-  padding: 12px 35px 12px 13px;
+  padding: 12px 13px;
   border: 1px solid #ccc;
   border-radius: 3px;
   color: #333;
@@ -78,12 +76,12 @@ select.b-select
 }
 .b-select__options {
   border-radius: 0 0 5px 5px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, .2);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .2), inset 0 -10px 14px -10px rgba(0,0,0,0.3);
+  background-color: #fff;
 }
 .b-select__options a {
   padding: 6px 15px;
   text-decoration: underline;
-  background-color: #fff;
 }
 .b-select__options li:last-child a {
   border-bottom: none;
@@ -111,7 +109,6 @@ select.b-select
   border-bottom-color: #999;
   border-left: 1px solid #d4d7c9;
   border-radius: 0 0 5px 5px;
-  background-color: #fff;
   color: #333;
 }
 
