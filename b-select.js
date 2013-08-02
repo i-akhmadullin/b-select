@@ -33,6 +33,9 @@
         $original = $select.find(':selected').first(),
         // Save all of the <option> elements
         $options = $select.find('option'),
+
+        minWidth = $select.outerWidth(),
+
         // We store lots of great stuff using jQuery data
         data = $select.data('dropkick') || {},
         // This gets applied to the 'b-select' element
@@ -65,8 +68,13 @@
       // Update the reference to $dk
       $dk = $('#b-select_' + id).show();
 
+      $dk.find('.b-select__toggle').css({
+        'min-width' : minWidth + 'px'
+      });
+
+
       // Save the current mod
-      mod = $select.data('mod') ? $select.data('mod') : 'default';
+      mod = $select.attr('mod') ? $select.attr('mod') : 'default';
       $dk.addClass('b-select_mod_' + mod);
       data.mod = mod;
 

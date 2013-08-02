@@ -1,0 +1,13 @@
+{
+  "name": "b-select",
+  "version": "0.0.1",
+  "description": "Custom simple <select>",
+  "repository": "",
+  "author": "",
+  "license": "MIT",
+  "readmeFilename": "readme.md",
+  "devDependencies": {
+    "grunt": "0.4.1",
+    "grunt-contrib-stylus": "0.7.0"
+  }
+}

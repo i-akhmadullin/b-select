@@ -1,0 +1,10 @@
+{
+  "name": "b-select",
+  "version": "0.0.1",
+  "ignore": [
+    ".gitignore",
+    "*.json",
+    "*.html",
+    "*.coffee"
+  ]
+}
