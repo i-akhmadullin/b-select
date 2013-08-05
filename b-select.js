@@ -324,7 +324,7 @@
         $dk = $focused;
       }
 
-      if ($dk.length) {
+      if ($dk && $dk.length) {
         _handleKeyBoardNav(e, $dk);
       }
     });
