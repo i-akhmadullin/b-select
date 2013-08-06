@@ -268,7 +268,7 @@
 
         oTemplate = oTemplate.replace('{{ value }}', $option.val());
         oTemplate = oTemplate.replace('{{ current }}', (_notBlank($option.val()) === view.value) ? current : '');
-        oTemplate = oTemplate.replace('{{ disabled }}', (typeof $option.attr('disabled') != 'undefined') ? disabled : '');
+        oTemplate = oTemplate.replace('{{ disabled }}', (typeof $option.attr('disabled') !== 'undefined') ? disabled : '');
         oTemplate = oTemplate.replace('{{ text }}', $option.text());
 
         options[options.length] = oTemplate;
