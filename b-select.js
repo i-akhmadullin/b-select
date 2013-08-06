@@ -4,12 +4,10 @@
   var methods = {},
     lists   = [],
     keyMap = {
-      'left':  37,
-      'up':    38,
-      'right': 39,
-      'down':  40,
-      'enter': 13,
-      'tab':   9
+      UP:    38,
+      DOWN:  40,
+      ENTER: 13,
+      TAB:   9
     },
     dropdownTemplate = [
       '<div class="b-select" id="b-select_{{ id }}">',
@@ -22,7 +20,7 @@
         '</div>',
       '</div>'
     ].join(''),
-    optionTemplate = '<li class="{{ current }}"><a data-dk-dropdown-value="{{ value }}">{{ text }}</a></li>';
+    optionTemplate = '<li class="{{ current }} {{ disabled }}"><a data-dk-dropdown-value="{{ value }}">{{ text }}</a></li>';
 
   methods.init = function (settings) {
     settings = $.extend({}, settings);
@@ -39,7 +37,7 @@
         // We store lots of great stuff using jQuery data
         data = $select.data('dropkick') || {},
         // This gets applied to the 'b-select' element
-        id = $select.attr('id') || $select.attr('name'),
+        id = this.id || this.name,
         // The completed b-select element
         $dk = false,
         mod;
@@ -156,24 +154,26 @@
       prev;
 
     switch (code) {
-      case keyMap.enter:
+      case keyMap.ENTER:
         if (open) {
-          _updateFields(current.find('a'), $dk);
-          _closeDropdown($dk);
+          if(!current.hasClass('b-select__option_disabled')){
+            _updateFields(current.find('a'), $dk);
+            _closeDropdown($dk);
+          }
         } else {
           _openDropdown($dk);
         }
         e.preventDefault();
       break;
 
-      case keyMap.tab:
+      case keyMap.TAB:
         if(open){
           _updateFields(current.find('a'), $dk);
           _closeDropdown($dk);
         }
       break;
 
-      case keyMap.up:
+      case keyMap.UP:
         prev = current.prev('li');
         if (open) {
           if (prev.length) {
@@ -187,7 +187,7 @@
         e.preventDefault();
       break;
 
-      case keyMap.down:
+      case keyMap.DOWN:
         if (open) {
           next = current.next('li').first();
           if (next.length) {
@@ -263,10 +263,12 @@
       for (var i = 0, l = view.options.length; i < l; i++) {
         var $option = $(view.options[i]),
           current   = 'b-select__option_current',
+          disabled  = 'b-select__option_disabled',
           oTemplate = optionTemplate;
 
         oTemplate = oTemplate.replace('{{ value }}', $option.val());
         oTemplate = oTemplate.replace('{{ current }}', (_notBlank($option.val()) === view.value) ? current : '');
+        oTemplate = oTemplate.replace('{{ disabled }}', (typeof $option.attr('disabled') != 'undefined') ? disabled : '');
         oTemplate = oTemplate.replace('{{ text }}', $option.text());
 
         options[options.length] = oTemplate;
@@ -283,71 +285,60 @@
     return ($.trim(text).length > 0) ? text : false;
   }
 
-  $(function () {
 
+  $(function () {
     $('.b-select__options-inner').addClass('overthrow');
 
-    // Handle click events on the dropdown toggler
-    $(document).on('click', '.b-select__toggle', function() {
-      var $dk  = $(this).parents('.b-select').first();
+    $(document)
+      .on('click', '.b-select__toggle', function() {
+        var $dk  = $(this).parents('.b-select').first();
 
-      _openDropdown($dk);
+        _openDropdown($dk);
 
-      return false;
-    });
+        return false;
+      })
+      .on('click', '.b-select__options a', function() {
+        var $option = $(this),
+            $dk     = $option.parents('.b-select').first();
 
-    // Handle click events on individual dropdown options
-    $(document).on('click', '.b-select__options a', function() {
-      var $option = $(this),
-          $dk     = $option.parents('.b-select').first();
+        if(!$option.parent().hasClass('b-select__option_disabled')){
+          _closeDropdown($dk);
+          _updateFields($option, $dk);
+          _setCurrent($option.parent(), $dk);
+        }
+        return false;
+      })
 
-      _closeDropdown($dk);
-      _updateFields($option, $dk);
-      _setCurrent($option.parent(), $dk);
+      .bind('keydown.dk_nav', function(e) {
+        var $open  = $('.b-select.b-select_open'),
+          // Look for a focused dropdown
+          $focused = $('.b-select.b-select_focus'),
+          // Will be either $open, $focused, or null
+          $dk = null;
+        // If we have an open dropdown, key events should get sent to that one
+        if ($open.length) {
+          $dk = $open;
+        } else if ($focused.length && !$open.length) {
+          // But if we have no open dropdowns, use the focused dropdown instead
+          $dk = $focused;
+        }
 
-      return false;
-    });
+        if ($dk && $dk.length) {
+          _handleKeyBoardNav(e, $dk);
+        }
+      })
 
-    // Setup keyboard nav
-    $(document).bind('keydown.dk_nav', function(e) {
-      var $open    = $('.b-select.b-select_open'),
-        // Look for a focused dropdown
-        $focused = $('.b-select.b-select_focus'),
-        // Will be either $open, $focused, or null
-        $dk = null;
+      .on('keyup', function(e) {
+        if (e.keyCode === 27) {
+          _closeDropdown($('.b-select'));
+        }
+      })
 
-      // If we have an open dropdown, key events should get sent to that one
-      if ($open.length) {
-        $dk = $open;
-      } else if ($focused.length && !$open.length) {
-        // But if we have no open dropdowns, use the focused dropdown instead
-        $dk = $focused;
-      }
-
-      if ($dk && $dk.length) {
-        _handleKeyBoardNav(e, $dk);
-      }
-    });
-
-    $(document).on('keyup', function(e) {
-      if (e.keyCode === 27) {
-        _closeDropdown($('.b-select'));
-      }
-    });
-
-    $(document).on('click', function(e) {
-      if(!$(e.target).closest('.b-select').length) {
-        _closeDropdown($('.b-select'));
-      }
-    });
+      .on('click', function(e) {
+        if(!$(e.target).closest('.b-select').length) {
+          _closeDropdown($('.b-select'));
+        }
+      });
   });
 
 })(jQuery, window, document);
-
-
-
-$('.b-select').dropkick({
-  change: function (value/*, label*/) {
-    console.log(value);
-  }
-});

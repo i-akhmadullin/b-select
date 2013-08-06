@@ -15,7 +15,7 @@
   </head>
   <body>
     <select id="first" name="just-select" class="b-select">
-      <option value="AA tree">AA tree</option>
+      <option value="AA tree" disabled>AA tree</option>
       <option value="AVL tree">AVL tree</option>
       <option value="Binary search tree">Binary search tree</option>
       <option value="Binary tree">Binary tree</option>
@@ -55,9 +55,9 @@
       <option value="Dynamic perfect hash table">Dynamic perfect hash table</option>
       <option value="Hash array mapped trie">Hash array mapped trie</option>
       <option value="Hash list">Hash list</option>
-      <option value="Hash table">Hash table</option>
-      <option value="Hash tree">Hash tree</option>
-      <option value="Hash trie">Hash trie</option>
+      <option value="Hash table" disabled>Hash table</option>
+      <option value="Hash tree" disabled>Hash tree</option>
+      <option value="Hash trie" disabled>Hash trie</option>
       <option value="Koorde">Koorde</option>
       <option value="Prefix hash tree">Prefix hash tree</option>
       <option value="Rolling hash">Rolling hash</option>
@@ -65,5 +65,12 @@
     </select>
     <script src="http://yandex.st/jquery/1.9.1/jquery.min.js"></script>
     <script src="b-select.js"></script>
+    <script>
+      $('.b-select').dropkick({
+        change: function (value/*, label*/) {
+          console.log(value);
+        }
+      });
+    </script>
   </body>
 </html>
