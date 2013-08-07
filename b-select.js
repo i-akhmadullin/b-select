@@ -29,14 +29,12 @@
       var $select = $(this),
         // Store a reference to the originally selected <option> element
         $original = $select.find(':selected').first(),
-        // Save all of the <option> elements
         $options = $select.find('option'),
 
         minWidth = $select.outerWidth(),
 
         // We store lots of great stuff using jQuery data
         data = $select.data('dropkick') || {},
-        // This gets applied to the 'b-select' element
         id = this.id || this.name,
         // The completed b-select element
         $dk = false,
@@ -60,8 +58,8 @@
 
       $dk.addClass($select[0].className);
 
-      // Hide the <select> list and place our new one in front of it
-      $select.before($dk);
+      // Hide the <select> list and place new one after it, so it can be selected with css sibling selector
+      $select.after($dk);
 
       // Update the reference to $dk
       $dk = $('#b-select_' + id).show();
@@ -124,13 +122,14 @@
   };
 
   // Reload / rebuild, in case of dynamic updates etc.
-  // Credits to Jeremy (http://stackoverflow.com/users/1380047/jeremy-p)
   methods.reload = function () {
-    var $select = $(this);
-    var data = $select.data('dropkick');
-    $select.removeData('dropkick');
-    $('#b-select_' + data.id).remove();
-    $select.dropkick(data.settings);
+    $(this).each(function() {
+      var $select = $(this);
+      var data = $select.data('dropkick');
+      $select.removeData('dropkick');
+      $('#b-select_' + data.id).remove();
+      $select.dropkick(data.settings);
+    });
   };
 
   // Expose the plugin
@@ -215,9 +214,12 @@
     data  = $dk.data('dropkick');
 
     $select = data.$select;
-    $select.val(value).trigger('change'); // Added to let it act like a normal select
+    $select.focus();
+    $select.val(value).trigger('change');
+    // $select.blur();
 
     $dk.find('.b-select__label').text(label);
+    $dk.focus();
 
     reset = reset || false;
 
@@ -226,7 +228,6 @@
     }
   }
 
-  // Set the currently selected option
   function _setCurrent($current, $dk) {
     $dk.find('.b-select__option_current').removeClass('b-select__option_current');
     $current.addClass('b-select__option_current');
@@ -239,12 +240,10 @@
     $dk.find('.b-select__options-inner').animate({ scrollTop: height + 'px' }, 0);
   }
 
-  // Close a dropdown
   function _closeDropdown($dk) {
     $dk.removeClass('b-select_open');
   }
 
-  // Open a dropdown
   function _openDropdown($dk) {
     $dk.find('.b-select__options').css({ top : $dk.find('.b-select__toggle').outerHeight() - 1 });
     $dk.toggleClass('b-select_open');
