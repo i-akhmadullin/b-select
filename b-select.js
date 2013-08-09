@@ -53,7 +53,6 @@
         data.options   = $options;
       }
 
-      // Build the dropdown HTML
       $dk = _build(dropdownTemplate, data);
 
       $dk.addClass($select[0].className);
@@ -68,8 +67,6 @@
         'min-width' : minWidth + 'px'
       });
 
-
-      // Save the current mod
       mod = $select.attr('mod') ? $select.attr('mod') : 'default';
       $dk.addClass('b-select_mod_' + mod);
       data.mod = mod;
@@ -201,6 +198,23 @@
       break;
 
       default:
+        var links = options.find('a'),
+            character = String.fromCharCode(code).toLowerCase(),
+            found = false;
+
+        //iterate anchors and match text with char code
+        links.each(function(index, link) {
+          if (!found) {
+            var $link = $(link);
+            var text = $link.text();
+
+            if (text && text.substring(0,1).toLowerCase() === character) {
+              found = true;
+              _setCurrent($link.parent(),$dk);
+            }
+          }
+        });
+
       break;
     }
   }
