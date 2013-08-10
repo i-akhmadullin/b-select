@@ -45,7 +45,6 @@
       } else {
         data.settings  = settings;
         data.id        = id;
-        data.$original = $original;
         data.$select   = $select;
         data.value     = _notBlank($select.val()) || _notBlank($original.attr('value'));
         data.label     = $original.text();
@@ -272,29 +271,30 @@
    * Turn the dropdownTemplate into a jQuery object and fill in the variables.
    */
   function _build (tpl, view) {
-    var template = tpl, options = [], $dk;
+    var template = '', optionsHtml = '', $dk,
+        current  = 'b-select__option_current',
+        disabled = 'b-select__option_disabled';
 
-    template = template.replace('{{ id }}', view.id);
-    template = template.replace('{{ label }}', view.label);
+    template = tpl
+      .replace('{{ id }}', view.id)
+      .replace('{{ label }}', view.label);
 
-    if (view.options && view.options.length) {
+    if (view.options) {
       for (var i = 0, l = view.options.length; i < l; i++) {
         var $option = $(view.options[i]),
-          current   = 'b-select__option_current',
-          disabled  = 'b-select__option_disabled',
-          oTemplate = optionTemplate;
 
-        oTemplate = oTemplate.replace('{{ value }}', $option.val());
-        oTemplate = oTemplate.replace('{{ current }}', (_notBlank($option.val()) === view.value) ? current : '');
-        oTemplate = oTemplate.replace('{{ disabled }}', (typeof $option.attr('disabled') !== 'undefined') ? disabled : '');
-        oTemplate = oTemplate.replace('{{ text }}', $option.text());
+        oTemplate = optionTemplate
+          .replace('{{ value }}', $option.val())
+          .replace('{{ current }}', (_notBlank($option.val()) === view.value) ? current : '')
+          .replace('{{ disabled }}', (typeof $option.attr('disabled') !== 'undefined') ? disabled : '')
+          .replace('{{ text }}', $option.text());
 
-        options[options.length] = oTemplate;
+        optionsHtml =+ oTemplate;
       }
     }
 
     $dk = $(template);
-    $dk.find('.b-select__options-inner').html(options.join(''));
+    $dk.find('.b-select__options-inner').html(optionsHtml);
 
     return $dk;
   }
