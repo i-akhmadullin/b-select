@@ -33,7 +33,6 @@
 
         minWidth = $select.outerWidth(),
 
-        // We store lots of great stuff using jQuery data
         data = $select.data('dropkick') || {},
         id = this.id || this.name,
         // The completed b-select element
@@ -127,6 +126,12 @@
       $('#b-select_' + data.id).remove();
       $select.dropkick(data.settings);
     });
+  };
+
+  methods.setValue = function (value) {
+    var $dk = $(this).data('dropkick').$dk;
+    var $option = $dk.find('.b-select__options a[data-dk-dropdown-value="' + value + '"]');
+    _updateFields($option, $dk);
   };
 
   // Expose the plugin
