@@ -289,7 +289,7 @@
           .replace('{{ disabled }}', (typeof $option.attr('disabled') !== 'undefined') ? disabled : '')
           .replace('{{ text }}', $option.text());
 
-        optionsHtml =+ oTemplate;
+        optionsHtml += oTemplate;
       }
     }
 
@@ -302,7 +302,6 @@
   function _notBlank(text) {
     return ($.trim(text).length > 0) ? text : false;
   }
-
 
   $(function () {
     $('.b-select__options-inner').addClass('overthrow');
